@@ -1,0 +1,8 @@
+Datum provedení;Datum zaúètování;Èíslo úètu;Název úètu;Kategorie transakce;Èíslo protiúètu;Název protiúètu;Typ transakce;Zpráva;Poznámka;VS;KS;SS;Zaúètovaná èástka;Mìna úètu;Pùvodní èástka a mìna;Pùvodní èástka a mìna;Poplatek;Id transakce;Vlastní poznámka;Název obchodníka;Mìsto
+31.05.2022;31.05.2022 22:08;210291002/5500;Foobar s.r.o.;Platba;296485675/5500;;Odchozí okamžitá úhrada;PRODEJNÍ SLUZBY ZA KVETEN 1995;;202106056;;;-1 815.05;CZK;;;0;72415442;;;
+29.05.2022;29.05.2022 17:14;210291002/5500;Foobar s.r.o.;Platba;35-6420840257/0100;;Jednorázová platba;;;22050;;;-1000;CZK;;;0;1122232222;;;
+23.05.2022;26.05.2022 05:05;210291002/5500;Foobar s.r.o.;Platba kartou;547872XXXXXX9488;;Platba kartou;"CS MARMAN ORLÍK; ORLÍK; CZE";"CS MARMAN ORLÍK; ORLÍK; CZE";;1178;33;-4025.3;CZK;;;29;4717315;;ÈS MarMan;Orlík nad Vltavou
+23.05.2022;23.05.2022 18:12;210291002/5500;Foobar s.r.o.;Platba;7770237/0100;;Odchozí okamžitá úhrada;PLATBA ELE ZAKAZNICKE CISLO: 0014646315;;74920600;;;-62074.6;CZK;;;0;47134193;;PRE;
+19.05.2022;19.05.2022 12:26;210291002/5500;Foobar s.r.o.;Platba;8282852104/6100;David Volápka;Pøíchozí platba;;pùjèka;;;;800000;CZK;;;0;47078145;;;
+17.05.2022;17.05.2022 08:55;210291002/5500;Foobar s.r.o.;Platba;56708424/7970;Koleèková;Pøíchozí platba;;Splátka kupni ceny;7351208605;;;455000;CZK;;;0;4704133989;;;
+12.05.2022;12.05.2022 16:17;210291002/5500;Foobar s.r.o.;Hotovostní operace;;;Vklad hotovosti;;"Vklad ; Poboèka Brno, Øevnická 1/121";;;;150000;CZK;;;0;3702425533;;;

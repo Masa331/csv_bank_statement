@@ -43,10 +43,19 @@ class CsvBankStatement
       end
 
       encoding = ACSV::Detect.encoding(@raw_data)
-      @raw_data.force_encoding(encoding)
-      separator = ACSV::Detect.separator(@raw_data)
+      #TODO,HACK: Unfortunatelly it's hard to detect files between Windows-1250 and eg. Windows-1252. Windows-1250
+      #  is a safer bet for us now
+      encoding =
+        if encoding.include?('windows')
+          'Windows-1250'
+        else
+          encoding
+        end
 
-      csv = CSV.parse(@raw_data.encode('UTF-8'), col_sep: separator)
+      @raw_data.force_encoding(encoding)
+      in_utf = @raw_data.encode('UTF-8')
+      separator = ACSV::Detect.separator(in_utf)
+      csv = CSV.parse(in_utf, col_sep: separator)
 
       if csv.first[0..9] == RB_HEADER
         parse_rb_statement(csv)
@@ -59,10 +68,6 @@ class CsvBankStatement
 
     def parse_rb_statement(csv)
       txs = csv[1..-1]
-
-      number = nil
-      account = txs.first[2]
-      transactions = []
 
       transactions = txs.flat_map do |tx|
         note = [tx[4], tx[6], tx[7], tx[8], tx[9], tx[19], tx[20], tx[21]].select { !_1.nil? && !_1.empty? }.join(', ')

@@ -53,4 +53,26 @@ class TestCsvBankStatement < Minitest::Test
     assert_equal BigDecimal('29'), fee_tx.amount
     assert_equal 'Poplatek k Platba kartou, Platba kartou, CS MARMAN ORLÍK; ORLÍK; CZE, CS MARMAN ORLÍK; ORLÍK; CZE, ČS MarMan, Orlík nad Vltavou', fee_tx.note
   end
+
+  def test_kb_statement
+    data = File.read('./test/files/kb_statement.csv')
+    statement = CsvBankStatement.parse(data)
+
+    assert statement.known?
+
+    payment = statement.transactions.first
+    assert_equal '1152992080267/0100', payment.counterparty
+    assert_equal '1152992080267', payment.counterparty_account
+    assert_equal '0100', payment.counterparty_bank_code
+    assert_equal '000-31052022 005-005-001527910', payment.id
+    assert_equal BigDecimal('6780'), payment.amount
+    assert_equal '9', payment.variable_symbol
+    assert_equal '0', payment.specific_symbol
+    assert_equal '498', payment.constant_symbol
+    assert_equal Date.parse('31.05.2022'), payment.date
+    assert_equal 'Planovana splatka uveru/uroku, SPLATKA JISTINY, DANTOM INDUSTRIAL S.R.O., Z    CK-0001158192180267', payment.note
+    assert_equal 'CZK', payment.currency
+    assert_equal '51-3819161607', payment.account
+    assert_equal 'Foobar s.r.o.', payment.account_identifier
+  end
 end

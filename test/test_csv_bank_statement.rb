@@ -104,4 +104,33 @@ class TestCsvBankStatement < Minitest::Test
     assert_equal 'PLATEBNÍ KARTY VISA CZK, Mobilní platba, 20220630 PLATEBNÍ KARTY, SMISENE ZB. PISKACKOV, SOBEKURY 42                CZ   45, 4779 75** **** 8792        VISA, 28.06.2022               323,00 CZK', payment.note
     assert_equal BigDecimal('323'), payment.amount
   end
+
+  def test_paypal_statement
+    data = File.read('./test/files/paypal_statement.csv')
+    statement = CsvBankStatement.parse(data)
+
+    assert statement.known?
+
+    assert_equal 12, statement.transactions.size
+
+    payment = statement.transactions.first
+    assert_nil payment.counterparty
+    assert_nil payment.counterparty_account
+    assert_nil payment.counterparty_bank_code
+    assert_equal '38880240BR', payment.id
+    assert_equal BigDecimal('-175424.07'), payment.amount
+    assert_nil payment.variable_symbol
+    assert_nil payment.specific_symbol
+    assert_nil payment.constant_symbol
+    assert_equal Date.parse('29.04.2022'), payment.date
+    assert_equal 'FIO Firma CZK, 1710', payment.note
+    assert_equal 'CZK', payment.currency
+    assert_nil payment.account
+    assert_nil payment.account_identifier
+
+    payment = statement.transactions[11]
+    assert_equal BigDecimal('-2.12'), payment.amount
+    assert_equal 'Fee: atthecoz@gmail.com, Willow Fellow Studios', payment.note
+    assert_equal 'USD', payment.currency
+  end
 end

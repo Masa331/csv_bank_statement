@@ -1,0 +1,11 @@
+Date,Time,Time Zone,Description,Currency,Gross,Fee,Net,Balance,Transaction ID,From Email Address,Name,Bank Name,Bank Account,Shipping and Handling Amount,Sales Tax,Invoice ID,Reference Txn ID
+4/29/2022,17:42:49,Europe/Prague,General Withdrawal - Bank Account,CZK,"-175,424.07",0.00,"-175,424.07","-175,423.26",38880240BR,,,FIO Firma CZK,1710,0.00,0.00,,
+4/29/2022,17:42:49,Europe/Prague,General Currency Conversion,CZK,"175,424.07",0.00,"175,424.07",0.81,4L998323JH,,,,,0.00,0.00,,388E0240BR323123D
+4/29/2022,17:43:38,Europe/Prague,General Withdrawal - Bank Account,CZK,"-77,203.52",0.00,"-77,203.52","-77,202.71",2XP0409,,,FIO Firma CZK,1710,0.00,0.00,,
+4/29/2022,17:43:38,Europe/Prague,General Currency Conversion,CZK,"77,203.52",0.00,"77,203.52",0.81,49T80682X029,,,,,0.00,0.00,,2XP998A407722L
+4/29/2022,17:58:26,Europe/Prague,Mobile Payment,CZK,"1,333.00",-81.85,"1,251.15","1,251.96",970T430543,palenahannah@gmail.com,Monica Pomar,,,0.00,0.00,,
+4/2/2022,19:50:49,Europe/Prague,Account Hold for Open Authorization,EUR,-49.99,0.00,-49.99,"3,255.81",2WX41795R,,,,,0.00,0.00,,047657PU9126
+4/2/2022,19:50:51,Europe/Prague,PreApproved Payment Bill User Payment,EUR,-49.99,0.00,-49.99,"3,205.82",9KD097060L574,paypal_euro@adobe.com,Adobe Systems Software Ireland LTD,,,0.00,0.00,BL2141975453,57U91236
+4/2/2022,19:50:51,Europe/Prague,Reversal of General Account Hold,EUR,49.99,0.00,49.99,"3,255.81",4GG2304413827,,,,,0.00,0.00,BL2151974453,X417RC2599
+4/29/2022,17:43:38,Europe/Prague,General Currency Conversion,EUR,"-3,255.00",0.00,"-3,255.00",0.81,8A9961,,,,,0.00,0.00,,2XP04980772
+4/7/2022,19:32:19,Europe/Prague,Express Checkout Payment,USD,33.76,-2.12,31.64,"3,870.62",3R440,atthecoz@gmail.com,Willow Fellow Studios,,,22.35,0.00,,

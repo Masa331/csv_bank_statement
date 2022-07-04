@@ -33,6 +33,7 @@ class CsvBankStatement
     KB_BUSINESS_HEADER = ['Datum vytvoreni souboru', 'Cislo uctu', 'Mena uctu', 'IBAN', 'Nazev uctu', 'Vypis ze dne', 'Cislo vypisu', 'Predchozi vypis ze dne', 'Pocet polozek', 'Pocatecni zustatek']
 
     KB_PERSONAL_HEADER = ['MojeBanka, export transakční historie', 'Datum vytvoření souboru', nil, 'Číslo účtu', 'IBAN', 'Název účtu']
+    PAYPAL_HEADER = ["Date", "Time", "Time Zone", "Description", "Currency", "Gross", "Fee", "Net", "Balance", "Transaction ID"]
 
     def self.call(raw_data)
       new(raw_data).parse
@@ -68,6 +69,8 @@ class CsvBankStatement
         parse_kb_business_statement(csv)
       elsif csv[0..5].map(&:first) == KB_PERSONAL_HEADER
         parse_kb_personal_statement(csv)
+      elsif csv.first[0..9] == PAYPAL_HEADER
+        parse_paypal_statement(csv)
       else
         [false, []]
       end
@@ -187,6 +190,46 @@ class CsvBankStatement
         end
 
         Transaction.new(**attrs)
+      end
+
+      [true, transactions]
+    end
+
+    def parse_paypal_statement(csv)
+      txs = csv[1..-1]
+
+      transactions = txs.flat_map do |row|
+        net = BigDecimal row[7].delete(',')
+        fee = BigDecimal row[6].delete(',')
+
+        note = [row[10], row[11], row[12], row[13], row[16], row[17]].select { !_1.nil? }.map(&:strip).select { !_1.empty? }.join(', ')
+
+        attrs = {
+          id: row[9],
+          account: nil,
+          account_identifier: nil,
+          counterparty: nil,
+          counterparty_account: nil,
+          counterparty_bank_code: nil,
+          amount: net,
+          date: Date.strptime(row[0], '%m/%d/%Y'),
+          variable_symbol: nil,
+          specific_symbol: nil,
+          constant_symbol: nil,
+          note: note,
+          currency: row[4],
+          raw: row
+        }
+
+        if fee.nonzero?
+          fee_attrs = attrs.dup
+          fee_attrs[:amount] = fee
+          fee_attrs[:note] = "Fee: #{fee_attrs[:note]}"
+
+          [Transaction.new(**attrs), Transaction.new(**fee_attrs)]
+        else
+          [Transaction.new(**attrs)]
+        end
       end
 
       [true, transactions]

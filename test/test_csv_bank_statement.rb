@@ -54,8 +54,8 @@ class TestCsvBankStatement < Minitest::Test
     assert_equal 'Poplatek k Platba kartou, Platba kartou, CS MARMAN ORLÍK; ORLÍK; CZE, CS MARMAN ORLÍK; ORLÍK; CZE, ČS MarMan, Orlík nad Vltavou', fee_tx.note
   end
 
-  def test_kb_statement
-    data = File.read('./test/files/kb_statement.csv')
+  def test_kb_business_statement
+    data = File.read('./test/files/kb_business_statement.csv')
     statement = CsvBankStatement.parse(data)
 
     assert statement.known?
@@ -74,5 +74,34 @@ class TestCsvBankStatement < Minitest::Test
     assert_equal 'CZK', payment.currency
     assert_equal '51-3819161607', payment.account
     assert_equal 'Foobar s.r.o.', payment.account_identifier
+  end
+
+  def test_kb_personal_statement
+    data = File.read('./test/files/kb_personal_statement.csv')
+    statement = CsvBankStatement.parse(data)
+
+    assert statement.known?
+
+    assert_equal 3, statement.transactions.size
+
+    payment = statement.transactions.first
+
+    assert_equal '2727/2700', payment.counterparty
+    assert_equal '2727', payment.counterparty_account
+    assert_equal '2700', payment.counterparty_bank_code
+    assert_equal '001-30062022 1602 602023 874281', payment.id
+    assert_equal BigDecimal('-4055'), payment.amount
+    assert_equal '766250273', payment.variable_symbol
+    assert_equal '0', payment.specific_symbol
+    assert_equal '0', payment.constant_symbol
+    assert_equal Date.parse('30.06.2022'), payment.date
+    assert_equal 'Platba na vrub vašeho účtu', payment.note
+    assert_equal 'CZK', payment.currency
+    assert_equal '35-1843350247/0100', payment.account
+    assert_equal 'KALMAJEK PETR', payment.account_identifier
+
+    payment = statement.transactions[1]
+    assert_equal 'PLATEBNÍ KARTY VISA CZK, Mobilní platba, 20220630 PLATEBNÍ KARTY, SMISENE ZB. PISKACKOV, SOBEKURY 42                CZ   45, 4779 75** **** 8792        VISA, 28.06.2022               323,00 CZK', payment.note
+    assert_equal BigDecimal('323'), payment.amount
   end
 end

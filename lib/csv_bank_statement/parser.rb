@@ -28,8 +28,11 @@ class CsvBankStatement
     end
 
     RB_HEADER = ['Datum provedení', 'Datum zaúčtování', 'Číslo účtu', 'Název účtu', 'Kategorie transakce', 'Číslo protiúčtu', 'Název protiúčtu', 'Typ transakce', 'Zpráva', 'Poznámka']
+
     # MojeBanka Business -> Transakcni historie -> Stazeni ucetnich dat -> Volba formatu: CSV
-    KB_HEADER = ['Datum vytvoreni souboru', 'Cislo uctu', 'Mena uctu', 'IBAN', 'Nazev uctu', 'Vypis ze dne', 'Cislo vypisu', 'Predchozi vypis ze dne', 'Pocet polozek', 'Pocatecni zustatek']
+    KB_BUSINESS_HEADER = ['Datum vytvoreni souboru', 'Cislo uctu', 'Mena uctu', 'IBAN', 'Nazev uctu', 'Vypis ze dne', 'Cislo vypisu', 'Predchozi vypis ze dne', 'Pocet polozek', 'Pocatecni zustatek']
+
+    KB_PERSONAL_HEADER = ['MojeBanka, export transakční historie', 'Datum vytvoření souboru', nil, 'Číslo účtu', 'IBAN', 'Název účtu']
 
     def self.call(raw_data)
       new(raw_data).parse
@@ -61,8 +64,10 @@ class CsvBankStatement
 
       if csv.first[0..9] == RB_HEADER
         parse_rb_statement(csv)
-      elsif csv.first[0..9] == KB_HEADER
-        parse_kb_statement(csv)
+      elsif csv.first[0..9] == KB_BUSINESS_HEADER
+        parse_kb_business_statement(csv)
+      elsif csv[0..5].map(&:first) == KB_PERSONAL_HEADER
+        parse_kb_personal_statement(csv)
       else
         [false, []]
       end
@@ -110,10 +115,10 @@ class CsvBankStatement
       [true, transactions]
     end
 
-    def parse_kb_statement(csv)
+    def parse_kb_business_statement(csv)
       txs = csv[1..-1]
 
-      transactions = txs.flat_map do |tx|
+      transactions = txs.map do |tx|
         note = [tx[23], tx[24], tx[17], tx[25], tx[26]].select { !_1.nil? && !_1.empty? }.join(', ')
         counterparty_account = tx[15]
         counterparty_bank_code = tx[16].rjust(4, '0')
@@ -135,6 +140,51 @@ class CsvBankStatement
           currency: tx[2],
           raw: tx
         }
+
+        Transaction.new(**attrs)
+      end
+
+      [true, transactions]
+    end
+
+    def parse_kb_personal_statement(csv)
+      txs = csv[18..-1]
+
+      transactions = txs.map do |tx|
+        account, currency = csv[3][1].strip.split(' ')
+
+        note = [tx[3], tx[12], tx[13], tx[14], tx[15], tx[16], tx[17], tx[18]].select { !_1.nil? }.map(&:strip).select { !_1.empty? }.join(', ')
+
+        attrs = {
+          id: tx[11],
+          account: "#{account}/0100",
+          account_identifier: csv[5][1],
+          counterparty: nil,
+          counterparty_account: nil,
+          counterparty_bank_code: nil,
+          amount: amount(tx[4]),
+          date: Date.parse(tx[0]),
+          variable_symbol: tx[8],
+          specific_symbol: tx[9],
+          constant_symbol: tx[10],
+          note: note,
+          currency: currency,
+          raw: tx
+        }
+
+        counterparty = tx[2]
+        if counterparty
+          counterparty_account, counterparty_bank_code =
+            if !counterparty.empty?
+              counterparty.split('/')
+            else
+              [nil, nil]
+            end
+
+          attrs[:counterparty] = counterparty
+          attrs[:counterparty_account] = counterparty_account
+          attrs[:counterparty_bank_code] = counterparty_bank_code
+        end
 
         Transaction.new(**attrs)
       end

@@ -1,0 +1,21 @@
+MojeBanka, export transakèní historie;;;;;;;;;;;;;;;;;;
+Datum vytvoøení souboru;04.07.2022;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;
+Èíslo úètu;35-1843350247 CZK;;;;;;;;;;;;;;;;;
+IBAN;CZ4401000000782848850247;;;;;;;;;;;;;;;;;
+Název úètu;KALMAJEK PETR;;;;;;;;;;;;;;;;;
+Vlastní název úètu;KALMAJEK PETR;;;;;;;;;;;;;;;;;
+Výpis za období;01.06.2022;;;;;;;;;;;;;;;;;
+;30.06.2022;;;;;;;;;;;;;;;;;
+Èíslo výpisu;6;;;;;;;;;;;;;;;;;
+Pøedchozí výpis ze dne;31.05.2022;;;;;;;;;;;;;;;;;
+Poèet položek;118;;;;;;;;;;;;;;;;;
+Poèáteèní zùstatek;13069.18;;;;;;;;;;;;;;;;;
+Celkem odepsáno (-);46625.06;;;;;;;;;;;;;;;;;
+Celkem pøipsáno (+);32005.06;;;;;;;;;;;;;;;;;
+Koneèný zùstatek;594.18;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;
+Datum splatnosti;Datum odepsání z jiné banky;Protiúèet a kód banky;Název protiúètu;Èástka;Originální èástka;Originální mìna;Kurz;VS;KS;SS;Identifikace transakce;Systémový popis;Popis pøíkazce;Popis pro pøíjemce;AV pole 1;AV pole 2;AV pole 3;AV pole 4
+30.06.2022;;2727/2700;;-4055;;;;766250273;0;0;001-30062022 1602 602023 874281;Platba na vrub vašeho úètu;;;                                   ;                                   ;                                   ;                                   
+30.06.2022;;;PLATEBNÍ KARTY VISA CZK;323;;;;10616580;1178;102123001;205-30062022 1086000338585;Mobilní platba;20220630 PLATEBNÍ KARTY;;SMISENE ZB. PISKACKOV              ;SOBEKURY 42                CZ   45 ;4779 75** **** 8792        VISA    ;28.06.2022               323,00 CZK
+01.06.2022;;;PLATEBNÍ KARTY VISA CZK;-112.9;;;;10616580;1178;102123001;205-01062022 1086001123138;Mobilní platba;20220601 PLATEBNÍ KARTY;;ROBIN OIL                          ;KLATOVY                    CZ   45 ;4779 75** **** 8792        VISA    ;29.05.2022               112,90 CZK

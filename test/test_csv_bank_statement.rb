@@ -70,7 +70,7 @@ class TestCsvBankStatement < Minitest::Test
     assert_equal '0', payment.specific_symbol
     assert_equal '498', payment.constant_symbol
     assert_equal Date.parse('31.05.2022'), payment.date
-    assert_equal 'Planovana splatka uveru/uroku, SPLATKA JISTINY, DANTOM INDUSTRIAL S.R.O., Z    CK-0001158192180267', payment.note
+    assert_equal 'Planovana splatka uveru/uroku, SPLATKA JISTINY, DANMAR S.R.O., Z    CK-0001158192180267, neco', payment.note
     assert_equal 'CZK', payment.currency
     assert_equal '51-3819161607', payment.account
     assert_equal 'Foobar s.r.o.', payment.account_identifier

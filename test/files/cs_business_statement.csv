@@ -1,0 +1,15 @@
+Prefix;;;;;;;;;;;;;;;;;;
+Account number;42425383;;;;;;;;;;;;;;;;;
+Start date of the period;2022/06/01;;;;;;;;;;;;;;;;;
+End date of the period;2022/06/30;;;;;;;;;;;;;;;;;
+Opening balance;24009.33;;;;;;;;;;;;;;;;;
+Final balance;21889.33;;;;;;;;;;;;;;;;;
+Debet (-);3979;;;;;;;;;;;;;;;;;
+Credit;1859;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;
+Payer's/payee's account prefix;Payer's/payee's account number;Payer's/payee's bank code;Amount (Transaction);Incoming/outgoing (credit-debit item);Accounting/non-accounting item;Constant symbol;Specific symbol;Item;Counteraccount name;Bank reference;Message for payee;Message for payer;Value date;Processing date;Variable symbol 1;Variable symbol 2;Payment reference;Reason for non-execution
+;;;-200;Outgoing;Úèetní;8;;Cena za internetové bankovnictví Business 24;;2.0220630001;;;2022/06/30;2022/07/01;;;;
+;;;-149;Outgoing;Úèetní;8;;Cena za vedení úètu;;2.022063;Za vedení úètu Klasik ÈS                                              (01.06.2022 - 30.06.2022)          ;;2022/06/30;2022/07/01;;;;
+705;776281;710;1859;Incoming;Úèetní;4146;;Pøíchozí úhrada;FÚ pro Olomouc.kraj;2.022062400006;;;2022/06/24;2022/06/24;2745428;2745428;;
+;2964856;500;-3630;Outgoing;Úèetní;;;Tuzemská odchozí úhrada;;2.02206;;;2022/06/07;2022/06/07;20210099;20210099;;

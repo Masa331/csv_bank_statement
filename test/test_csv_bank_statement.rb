@@ -169,4 +169,27 @@ class TestCsvBankStatement < Minitest::Test
 
     assert statement.known?
   end
+
+  def test_cs_business_statement
+    data = File.read('./test/files/cs_business_statement.csv')
+    statement = CsvBankStatement.parse(data)
+
+    assert statement.known?
+
+    assert_equal 4, statement.transactions.size
+
+    payment = statement.transactions.first
+    assert_nil payment.counterparty
+    assert_nil payment.counterparty_account
+    assert_nil payment.counterparty_bank_code
+    assert_equal '2.0220630001', payment.id
+    assert_equal BigDecimal('-200'), payment.amount
+    assert_nil payment.variable_symbol
+    assert_nil payment.specific_symbol
+    assert_equal '8', payment.constant_symbol
+    assert_equal Date.parse('30.06.2022'), payment.date
+    assert_equal 'Cena za internetové bankovnictví Business 24', payment.note
+    assert_nil payment.currency
+    assert_equal '42425383/0800', payment.account
+  end
 end

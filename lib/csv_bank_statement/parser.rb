@@ -35,6 +35,7 @@ class CsvBankStatement
     KB_PERSONAL_HEADER = ['MojeBanka, export transakční historie', 'Datum vytvoření souboru', nil, 'Číslo účtu', 'IBAN', 'Název účtu']
     PAYPAL_HEADER = ["Date", "Time", "Time Zone", "Description", "Currency", "Gross", "Fee", "Net", "Balance", "Transaction ID"]
     CSOB_PERSONAL_HEADER = ["číslo účtu", "datum zaúčtování", "částka", "měna", "zůstatek", "číslo účtu protiúčtu", "kód banky protiúčtu", "název účtu protiúčtu", "konstantní symbol", "variabilní symbol"]
+    CS_BUSINESS_HEADER = ["Prefix", "Account number", "Start date of the period", "End date of the period", "Opening balance", "Final balance", "Debet (-)", "Credit"]
 
     def self.call(raw_data)
       new(raw_data).parse
@@ -74,6 +75,8 @@ class CsvBankStatement
         parse_paypal_statement(csv)
       elsif csv[2][0..9] == CSOB_PERSONAL_HEADER
         parse_csob_personal_statement(csv)
+      elsif csv[0..7].map(&:first) == CS_BUSINESS_HEADER
+        parse_cs_business_statement(csv)
       else
         [false, []]
       end
@@ -263,6 +266,53 @@ class CsvBankStatement
           currency: row[3],
           raw: row
         }
+
+        Transaction.new(**attrs)
+      end
+
+      [true, transactions]
+    end
+
+    def parse_cs_business_statement(csv)
+      txs = csv[11..-1]
+      account = "#{csv[1][1]}/0800"
+
+      transactions = txs.map do |row|
+        note = [row[8], row[9], row[11], row[12], row[17]].select { !_1.nil? }.map(&:strip).select { !_1.empty? }.join(', ').gsub(/\s+/, ' ')
+
+        attrs = {
+          id: row[10],
+          account: account,
+          account_identifier: nil,
+          counterparty: nil,
+          counterparty_account: nil,
+          counterparty_bank_code: nil,
+          amount: BigDecimal(row[3].gsub(',', '.')),
+          date: Date.strptime(row[13], '%Y/%m/%d'),
+          variable_symbol: row[15],
+          specific_symbol: row[7],
+          constant_symbol: row[6],
+          note: note,
+          currency: nil,
+          raw: row
+        }
+
+        counterparty_account_prefix = row[0]
+        counterparty_account = row[1]
+        counterparty_bank_code = row[2]&.rjust(4, '0')
+
+        if counterparty_account
+          full_account =
+            if counterparty_account_prefix
+              "#{counterparty_account_prefix}-#{counterparty_account}"
+            else
+              counterparty_account
+            end
+
+          attrs[:counterparty] = "#{full_account}/#{counterparty_bank_code}"
+          attrs[:counterparty_account] = full_account
+          attrs[:counterparty_bank_code] = counterparty_bank_code
+        end
 
         Transaction.new(**attrs)
       end

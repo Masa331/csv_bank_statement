@@ -61,7 +61,7 @@ class CsvBankStatement
 
       @raw_data.force_encoding(encoding)
       in_utf = @raw_data.encode('UTF-8')
-      separator = ACSV::Detect.separator(in_utf)
+      separator = detect_separator(in_utf)
       csv = CSV.parse(in_utf, col_sep: separator)
 
       if csv.first[0..9] == RB_HEADER
@@ -272,6 +272,15 @@ class CsvBankStatement
 
     def amount(raw)
       BigDecimal(raw.gsub(' ', '').gsub(',', '.'))
+    end
+
+    def detect_separator(raw)
+      lines = raw.lines
+      20.times do |n|
+        separator = ACSV::Detect.separator(lines[n])
+
+        return separator if separator
+      end
     end
   end
 end

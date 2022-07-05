@@ -1,0 +1,11 @@
+Pohyby na úètu na úètu 3016/0300 ze dne 05.07.2022 10:06:21
+
+èíslo úètu;datum zaúètování;èástka;mìna;zùstatek;èíslo úètu protiúètu;kód banky protiúètu;název úètu protiúètu;konstantní symbol;variabilní symbol;specifický symbol;oznaèení operace;ID transakce;poznámka
+3016/0300;01.06.2021;-1000;CZK;121855.01;290033;300;pan foo;;;;Odchozí úhrada;104044430;
+3016/0300;01.06.2021;-36251;CZK;122855.01;705-77;710;;;9211291474;;Odchozí úhrada;103976832;
+3016/0300;01.06.2021;-5524;CZK;159106.01;1011-79;710;;;18676655;;Trvalý pøíkaz elektronicky èíslo 3;103959628;Zálohy na sociální – pan foo
+3016/0300;01.06.2021;-2627;CZK;164630.01;201020;710;;3558;9211291474;;Trvalý pøíkaz elektronicky èíslo 4;103842407;Zálohy na zdravotní – pan foo
+3016/0300;01.06.2021;-129200;CZK;167257.01;29003;300;pan foo;;;;Odchozí úhrada;103697979;
+3016/0300;01.06.2021;210782;CZK;296457.01;204819;2600;pan foo;0;2022005;0;Pøíchozí úhrada;103690560;pan foo
+3016/0300;01.06.2021;-100;CZK;85675.01;290033;300;pan foo;;;;Odchozí úhrada;103540623;
+3016/0300;01.06.2021;-1815;CZK;85775.01;296485;300;pan foo;;202100998;;Odchozí úhrada;103463667;UCETNI SLUZBY ZA KVETEN 2021

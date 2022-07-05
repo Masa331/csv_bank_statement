@@ -162,4 +162,11 @@ class TestCsvBankStatement < Minitest::Test
     assert_equal 'Pan Novák, Odchozí úhrada', payment.note
     assert_equal 'CZK', payment.currency
   end
+
+  def test_parsing_of_file_with_weird_separators
+    data = File.read('./test/files/weird_separator.csv')
+    statement = CsvBankStatement.parse(data)
+
+    assert statement.known?
+  end
 end

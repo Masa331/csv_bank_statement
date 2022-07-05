@@ -34,6 +34,7 @@ class CsvBankStatement
 
     KB_PERSONAL_HEADER = ['MojeBanka, export transakční historie', 'Datum vytvoření souboru', nil, 'Číslo účtu', 'IBAN', 'Název účtu']
     PAYPAL_HEADER = ["Date", "Time", "Time Zone", "Description", "Currency", "Gross", "Fee", "Net", "Balance", "Transaction ID"]
+    CSOB_PERSONAL_HEADER = ["číslo účtu", "datum zaúčtování", "částka", "měna", "zůstatek", "číslo účtu protiúčtu", "kód banky protiúčtu", "název účtu protiúčtu", "konstantní symbol", "variabilní symbol"]
 
     def self.call(raw_data)
       new(raw_data).parse
@@ -71,6 +72,8 @@ class CsvBankStatement
         parse_kb_personal_statement(csv)
       elsif csv.first[0..9] == PAYPAL_HEADER
         parse_paypal_statement(csv)
+      elsif csv[2][0..9] == CSOB_PERSONAL_HEADER
+        parse_csob_personal_statement(csv)
       else
         [false, []]
       end
@@ -230,6 +233,38 @@ class CsvBankStatement
         else
           [Transaction.new(**attrs)]
         end
+      end
+
+      [true, transactions]
+    end
+
+    def parse_csob_personal_statement(csv)
+      txs = csv[3..-1]
+
+      transactions = txs.map do |row|
+        counterparty_account = row[5]
+        counterparty_bank_code = row[6].rjust(4, '0')
+
+        note = [row[7], row[11], row[13]].select { !_1.nil? }.map(&:strip).select { !_1.empty? }.join(', ')
+
+        attrs = {
+          id: row[12],
+          account: row[0],
+          account_identifier: nil,
+          counterparty: "#{counterparty_account}/#{counterparty_bank_code}",
+          counterparty_account: counterparty_account,
+          counterparty_bank_code: counterparty_bank_code,
+          amount: BigDecimal(row[2]),
+          date: Date.parse(row[1]),
+          variable_symbol: row[9],
+          specific_symbol: row[10],
+          constant_symbol: row[8],
+          note: note,
+          currency: row[3],
+          raw: row
+        }
+
+        Transaction.new(**attrs)
       end
 
       [true, transactions]

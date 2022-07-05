@@ -133,4 +133,33 @@ class TestCsvBankStatement < Minitest::Test
     assert_equal 'Fee: atthecoz@gmail.com, Willow Fellow Studios', payment.note
     assert_equal 'USD', payment.currency
   end
+
+  def test_csob_personal_statement
+    data = File.read('./test/files/csob_personal_statement.csv')
+    statement = CsvBankStatement.parse(data)
+
+    assert statement.known?
+
+    assert_equal 2, statement.transactions.size
+
+    payment = statement.transactions.first
+    assert_equal '2048555105/2600', payment.counterparty
+    assert_equal '2048555105', payment.counterparty_account
+    assert_equal '2600', payment.counterparty_bank_code
+    assert_equal '103696078', payment.id
+    assert_equal BigDecimal('210782'), payment.amount
+    assert_equal '2022005', payment.variable_symbol
+    assert_equal '0', payment.specific_symbol
+    assert_equal '0', payment.constant_symbol
+    assert_equal Date.parse('10.06.2022'), payment.date
+    assert_equal 'Superstar, S.R.O.,, Příchozí úhrada, Pan Novák', payment.note
+    assert_equal 'CZK', payment.currency
+    assert_equal '251674128/0300', payment.account
+    assert_nil payment.account_identifier
+
+    payment = statement.transactions[1]
+    assert_equal BigDecimal('-100.55'), payment.amount
+    assert_equal 'Pan Novák, Odchozí úhrada', payment.note
+    assert_equal 'CZK', payment.currency
+  end
 end

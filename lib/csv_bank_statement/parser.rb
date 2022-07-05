@@ -254,7 +254,7 @@ class CsvBankStatement
           counterparty: "#{counterparty_account}/#{counterparty_bank_code}",
           counterparty_account: counterparty_account,
           counterparty_bank_code: counterparty_bank_code,
-          amount: BigDecimal(row[2]),
+          amount: BigDecimal(row[2].gsub(',', '')),
           date: Date.parse(row[1]),
           variable_symbol: row[9],
           specific_symbol: row[10],

@@ -36,6 +36,7 @@ class CsvBankStatement
     PAYPAL_HEADER = ["Date", "Time", "Time Zone", "Description", "Currency", "Gross", "Fee", "Net", "Balance", "Transaction ID"]
     CSOB_PERSONAL_HEADER = ["číslo účtu", "datum zaúčtování", "částka", "měna", "zůstatek", "číslo účtu protiúčtu", "kód banky protiúčtu", "název účtu protiúčtu", "konstantní symbol", "variabilní symbol"]
     CS_BUSINESS_HEADER = ["Prefix", "Account number", "Start date of the period", "End date of the period", "Opening balance", "Final balance", "Debet (-)", "Credit"]
+    UNICREDIT_BUSINESS_HEADER = ["Účet", "Částka", "Měna", "Datum zaúčtování", "Valuta", "Banka", "Název banky", "Název banky", "Číslo účtu", "Název účtu"]
 
     def self.call(raw_data)
       new(raw_data).parse
@@ -77,6 +78,8 @@ class CsvBankStatement
         parse_csob_personal_statement(csv)
       elsif csv[0..7].map(&:first) == CS_BUSINESS_HEADER
         parse_cs_business_statement(csv)
+      elsif csv[2][0..9] == UNICREDIT_BUSINESS_HEADER
+        parse_unicredit_business_statement(csv)
       else
         [false, []]
       end
@@ -313,6 +316,43 @@ class CsvBankStatement
           attrs[:counterparty_account] = full_account
           attrs[:counterparty_bank_code] = counterparty_bank_code
         end
+
+        Transaction.new(**attrs)
+      end
+
+      [true, transactions]
+    end
+
+    def parse_unicredit_business_statement(csv)
+      txs = csv[3..-1]
+      account = "#{csv[1][1]}/2700"
+
+      transactions = txs.map do |row|
+        note = [row[13], row[14], row[9], row[10], row[11], row[14], row[15], row[16]].select { !_1.nil? }.map(&:strip).select { !_1.empty? }.join(', ').gsub(/\s+/, ' ')
+
+        counterparty_account = row[8]&.strip
+        counterparty_bank_code =
+          case row[5]
+          when 'BACXCZPPXXX' then '2700'
+          else row[5]&.strip
+          end
+
+        attrs = {
+          id: row[23],
+          account: account,
+          account_identifier: nil,
+          counterparty: "#{counterparty_account}/#{counterparty_bank_code}",
+          counterparty_account: counterparty_account,
+          counterparty_bank_code: counterparty_bank_code,
+          amount: BigDecimal(row[1].gsub(',', '.')),
+          date: Date.strptime(row[4], '%Y-%m-%d'),
+          variable_symbol: row[20],
+          specific_symbol: row[21],
+          constant_symbol: row[19],
+          note: note,
+          currency: row[2],
+          raw: row
+        }
 
         Transaction.new(**attrs)
       end

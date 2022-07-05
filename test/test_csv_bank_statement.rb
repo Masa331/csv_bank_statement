@@ -192,4 +192,27 @@ class TestCsvBankStatement < Minitest::Test
     assert_nil payment.currency
     assert_equal '42425383/0800', payment.account
   end
+
+  def test_unicredit_business_statement
+    data = File.read('./test/files/unicredit_business_statement.csv')
+    statement = CsvBankStatement.parse(data)
+
+    assert statement.known?
+
+    assert_equal 2, statement.transactions.size
+
+    payment = statement.transactions.first
+    assert_equal '2114277/2700', payment.counterparty
+    assert_equal '2114277', payment.counterparty_account
+    assert_equal '2700', payment.counterparty_bank_code
+    assert_equal '656604', payment.id
+    assert_equal BigDecimal('1000'), payment.amount
+    assert_nil payment.variable_symbol
+    assert_nil payment.specific_symbol
+    assert_nil payment.constant_symbol
+    assert_equal Date.parse('01.06.2022'), payment.date
+    assert_equal 'MV strojírna s.r.o.', payment.note
+    assert_equal 'CZK', payment.currency
+    assert_equal '2113873/2700', payment.account
+  end
 end

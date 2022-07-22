@@ -48,10 +48,7 @@ class TestCsvBankStatement < Minitest::Test
     assert_equal 'Platba kartou, Platba kartou, CS MARMAN ORLÍK; ORLÍK; CZE, CS MARMAN ORLÍK; ORLÍK; CZE, ČS MarMan, Orlík nad Vltavou', payment.note
     assert_equal '1178', payment.constant_symbol
     assert_equal '33', payment.specific_symbol
-
-    fee_tx = statement.transactions[3]
-    assert_equal BigDecimal('29'), fee_tx.amount
-    assert_equal 'Poplatek k Platba kartou, Platba kartou, CS MARMAN ORLÍK; ORLÍK; CZE, CS MARMAN ORLÍK; ORLÍK; CZE, ČS MarMan, Orlík nad Vltavou', fee_tx.note
+    assert_equal BigDecimal('29'), payment.fee
   end
 
   def test_kb_business_statement
@@ -111,7 +108,7 @@ class TestCsvBankStatement < Minitest::Test
 
     assert statement.known?
 
-    assert_equal 12, statement.transactions.size
+    assert_equal 10, statement.transactions.size
 
     payment = statement.transactions.first
     assert_nil payment.counterparty
@@ -128,15 +125,11 @@ class TestCsvBankStatement < Minitest::Test
     assert_nil payment.account
     assert_nil payment.account_identifier
 
-    payment = statement.transactions[10]
+    payment = statement.transactions[9]
     assert_equal BigDecimal('33.76'), payment.amount
     assert_equal 'atthecoz@gmail.com, Willow Fellow Studios', payment.note
     assert_equal 'USD', payment.currency
-
-    payment = statement.transactions[11]
-    assert_equal BigDecimal('-2.12'), payment.amount
-    assert_equal 'Fee: atthecoz@gmail.com, Willow Fellow Studios', payment.note
-    assert_equal 'USD', payment.currency
+    assert_equal BigDecimal('-2.12'), payment.fee
   end
 
   def test_csob_personal_statement

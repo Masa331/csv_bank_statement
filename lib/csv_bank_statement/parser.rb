@@ -7,9 +7,9 @@ class CsvBankStatement
   class Parser
     class Transaction
       attr_reader :id, :counterparty, :counterparty_account, :counterparty_bank_code, :amount, :date, :variable_symbol,
-        :specific_symbol, :constant_symbol, :note, :currency, :account, :account_identifier, :raw
+        :specific_symbol, :constant_symbol, :note, :currency, :account, :account_identifier, :fee, :raw
 
-      def initialize(id:, counterparty:, counterparty_account:, counterparty_bank_code:, amount:, date:, variable_symbol:, specific_symbol:, constant_symbol:, note:, currency:, account:, account_identifier:, raw:)
+      def initialize(id:, counterparty:, counterparty_account:, counterparty_bank_code:, amount:, date:, variable_symbol:, specific_symbol:, constant_symbol:, note:, currency:, account:, account_identifier:, raw:, fee:)
         @id = id
         @counterparty = counterparty
         @counterparty_account = counterparty_account
@@ -23,6 +23,7 @@ class CsvBankStatement
         @currency = currency
         @account = account
         @account_identifier = account_identifier
+        @fee = fee
         @raw = raw
       end
     end
@@ -104,6 +105,7 @@ class CsvBankStatement
           counterparty_account: counterparty_account,
           counterparty_bank_code: counterparty_bank_code,
           amount: amount(tx[13]),
+          fee: fee,
           date: Date.parse(tx[1]),
           variable_symbol: tx[10],
           specific_symbol: tx[12],
@@ -113,15 +115,7 @@ class CsvBankStatement
           raw: tx
         }
 
-        if fee.nonzero?
-          fee_tx = attrs.dup
-          fee_tx[:amount] = amount(tx[17])
-          fee_tx[:note] = "Poplatek k #{fee_tx[:note]}"
-
-          [Transaction.new(**attrs), Transaction.new(**fee_tx)]
-        else
-          Transaction.new(**attrs)
-        end
+        Transaction.new(**attrs)
       end
 
       [true, transactions]
@@ -144,6 +138,7 @@ class CsvBankStatement
           counterparty_account: counterparty_account,
           counterparty_bank_code: counterparty_bank_code,
           amount: amount(tx[18]),
+          fee: 0,
           date: Date.parse(tx[13]),
           variable_symbol: tx[19],
           specific_symbol: tx[21],
@@ -175,6 +170,7 @@ class CsvBankStatement
           counterparty_account: nil,
           counterparty_bank_code: nil,
           amount: amount(tx[4]),
+          fee: 0,
           date: Date.parse(tx[0]),
           variable_symbol: tx[8],
           specific_symbol: tx[9],
@@ -221,6 +217,7 @@ class CsvBankStatement
           counterparty_account: nil,
           counterparty_bank_code: nil,
           amount: gross,
+          fee: fee,
           date: Date.strptime(row[0], '%m/%d/%Y'),
           variable_symbol: nil,
           specific_symbol: nil,
@@ -230,15 +227,7 @@ class CsvBankStatement
           raw: row
         }
 
-        if fee.nonzero?
-          fee_attrs = attrs.dup
-          fee_attrs[:amount] = fee
-          fee_attrs[:note] = "Fee: #{fee_attrs[:note]}"
-
-          [Transaction.new(**attrs), Transaction.new(**fee_attrs)]
-        else
-          [Transaction.new(**attrs)]
-        end
+        Transaction.new(**attrs)
       end
 
       [true, transactions]
@@ -261,6 +250,7 @@ class CsvBankStatement
           counterparty_account: counterparty_account,
           counterparty_bank_code: counterparty_bank_code,
           amount: BigDecimal(row[2].gsub(',', '')),
+          fee: 0,
           date: Date.parse(row[1]),
           variable_symbol: row[9],
           specific_symbol: row[10],
@@ -291,6 +281,7 @@ class CsvBankStatement
           counterparty_account: nil,
           counterparty_bank_code: nil,
           amount: BigDecimal(row[3].gsub(',', '.')),
+          fee: 0,
           date: Date.strptime(row[13], '%Y/%m/%d'),
           variable_symbol: row[15],
           specific_symbol: row[7],
@@ -345,6 +336,7 @@ class CsvBankStatement
           counterparty_account: counterparty_account,
           counterparty_bank_code: counterparty_bank_code,
           amount: BigDecimal(row[1].gsub(',', '.')),
+          fee: 0,
           date: Date.strptime(row[4], '%Y-%m-%d'),
           variable_symbol: row[20],
           specific_symbol: row[21],

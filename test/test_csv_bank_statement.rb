@@ -128,6 +128,11 @@ class TestCsvBankStatement < Minitest::Test
     assert_nil payment.account
     assert_nil payment.account_identifier
 
+    payment = statement.transactions[10]
+    assert_equal BigDecimal('33.76'), payment.amount
+    assert_equal 'atthecoz@gmail.com, Willow Fellow Studios', payment.note
+    assert_equal 'USD', payment.currency
+
     payment = statement.transactions[11]
     assert_equal BigDecimal('-2.12'), payment.amount
     assert_equal 'Fee: atthecoz@gmail.com, Willow Fellow Studios', payment.note

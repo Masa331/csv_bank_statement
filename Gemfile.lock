@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    csv_bank_statement (0.2.0)
+    csv_bank_statement (0.7.0)
       acsv
       csv
       czech_bank_account

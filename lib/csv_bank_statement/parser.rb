@@ -208,8 +208,8 @@ class CsvBankStatement
       txs = csv[1..-1]
 
       transactions = txs.flat_map do |row|
-        net = BigDecimal row[7].delete(',')
-        fee = BigDecimal row[6].delete(',')
+        gross = BigDecimal(row[5].delete(','))
+        fee = BigDecimal(row[6].delete(','))
 
         note = [row[10], row[11], row[12], row[13], row[16], row[17]].select { !_1.nil? }.map(&:strip).select { !_1.empty? }.join(', ')
 
@@ -220,7 +220,7 @@ class CsvBankStatement
           counterparty: nil,
           counterparty_account: nil,
           counterparty_bank_code: nil,
-          amount: net,
+          amount: gross,
           date: Date.strptime(row[0], '%m/%d/%Y'),
           variable_symbol: nil,
           specific_symbol: nil,

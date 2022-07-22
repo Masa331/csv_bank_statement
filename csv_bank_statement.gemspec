@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name = "csv_bank_statement"
-  spec.version = '0.7.0'
+  spec.version = '0.8.0'
   spec.authors = ["Premysl Donat"]
   spec.email = ["pdonat@seznam.cz"]
 
